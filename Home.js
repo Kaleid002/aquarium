@@ -9,11 +9,9 @@ import HandleCapture from './Button-hidden/Button-ScreenShot/ScreenCapture';
 import Coin_Function from './Gold/cashFunction';
 import TaskModal from './Task/TaskModal';
 import FishFeed from './Feed/FishFeed';
-//import StoreButton from './Store/StoreButton';
-//import WareHouseButton from './WareHouse/WareHouseButton';
 
 const Home = ({ navigation }) => {
-  const { picturebutonvisible, slideLeft, slideRight, slideAnimation,
+  const { picturebuttonvisible, slideLeft, slideRight, slideAnimation,
     toggleVisibility } = useHiddenAnimation();
 
   const { opacityValue, buttonOpacityAnime } = opacityAnimation();
@@ -123,17 +121,8 @@ const Home = ({ navigation }) => {
 
 
           <Animated.View style={{ opacity: slideAnimation }}>
-            {picturebutonvisible &&
-              <TouchableOpacity style={round_button_styles.buttonContainer} onPress={HandleCapture} >
-                <View
-                  style={[round_button_styles.buttonframe, { opacity: 0.8 }]}
-                >
-                  <Image
-                    source={require('./assets/img/PictureShot_Icon.png')}
-                    style={round_button_styles.Picture_FeedFood_Icon}
-                  />
-                </View>
-              </TouchableOpacity>
+            {picturebuttonvisible &&
+              <HandleCapture/>
             }
           </Animated.View>
 

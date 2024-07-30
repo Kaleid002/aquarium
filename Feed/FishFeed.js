@@ -46,10 +46,10 @@ const FishFeed = ({ onPress }) => {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: throttle((evt, gesturestate) => {
+      onPanResponderMove: throttle((gesturestate) => {
         setServoAngle(gesturestate.dx);
       }, 100),
-      onPanResponderRelease: (evt, gesture) => {
+      onPanResponderRelease: () => {
         setServoAngle(0);
       },
     }),

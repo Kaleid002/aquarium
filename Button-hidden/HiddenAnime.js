@@ -3,12 +3,12 @@ import { Animated } from "react-native";
 
 export const useHiddenAnimation = () => {
   const [isVisible, setVisibility] = useState(true);
-  const [picturebutonvisible, setpicturebutonvisible] = useState(false);
+  const [picturebuttonvisible, setpicturebuttonvisible] = useState(false);
   const [slideAnimation] = useState(new Animated.Value(0));
 
 
   const toggleVisibility = () => {
-    setpicturebutonvisible(!picturebutonvisible);
+    setpicturebuttonvisible(!picturebuttonvisible);
     Animated.timing(slideAnimation, {
       toValue: isVisible ? 1 : 0,
       duration: 500,
@@ -28,5 +28,5 @@ export const useHiddenAnimation = () => {
     outputRange: [0, 200],
   });
 
-  return { toggleVisibility, slideLeft, slideRight, slideAnimation, picturebutonvisible };
+  return { toggleVisibility, slideLeft, slideRight, slideAnimation, picturebuttonvisible };
 };
