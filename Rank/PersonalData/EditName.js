@@ -22,7 +22,7 @@ const EditName = () => {
       Name: text
     })
       .catch(error => {
-        console.error('更新參數出錯(POST Name): ', error);
+        console.error('Upadate Params Error(POST Name): ', error);
       });
   };
 

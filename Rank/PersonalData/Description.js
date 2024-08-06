@@ -21,10 +21,10 @@ const Description = () => {
       Introduction: text
     })
       .then(response => {
-        console.log('後端響應: ', response.data);
+        console.log('Backend response: ', response.data);
       })
       .catch(error => {
-        console.error('更新參數出錯(POST Introduction): ', error);
+        console.error('Update Params Error(POST Introduction): ', error);
       });
   };
   return (

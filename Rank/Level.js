@@ -21,7 +21,7 @@ const Level = () => {
         setTotalExperience(totalExperience);
       })
       .catch(error => {
-        console.error('获取参数时出错:', error);
+        console.error('Update Params Error:', error);
       });
   }, []);
 

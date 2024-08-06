@@ -1,5 +1,6 @@
-import { Text, View, TouchableOpacity, Animated, Image, Button } from 'react-native';
+import { Text, View, TouchableOpacity, Animated, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Video } from 'expo-av';
 
 import ExperienceBar from './Rank/ExperienceBar';
 import { round_button_styles } from './ScreenBackgroundStyles';
@@ -10,6 +11,7 @@ import Coin_Function from './Gold/cashFunction';
 import TaskModal from './Task/TaskModal';
 import FishFeed from './Feed/FishFeed';
 
+
 const Home = ({ navigation }) => {
   const { picturebuttonvisible, slideLeft, slideRight, slideAnimation,
     toggleVisibility } = useHiddenAnimation();
@@ -17,7 +19,14 @@ const Home = ({ navigation }) => {
   const { opacityValue, buttonOpacityAnime } = opacityAnimation();
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
+      <Video
+        source={{ uri: 'http://172.20.10.4:8080/hls/stream.m3u8' }}
+        style={{ width: '100%', height: '100%', position: 'absolute' }}
+        useNativeControls
+        shouldPlay={true}
+        resizeMode="contain"
+      />
       <Animated.View style={{ opacity: opacityValue }}>
         <View style={{ flexDirection: 'row' }}>
           <Animated.View style={{ transform: [{ translateX: slideLeft }], width: '50%', height: '70%' }}>
@@ -122,7 +131,7 @@ const Home = ({ navigation }) => {
 
           <Animated.View style={{ opacity: slideAnimation }}>
             {picturebuttonvisible &&
-              <HandleCapture/>
+              <HandleCapture />
             }
           </Animated.View>
 

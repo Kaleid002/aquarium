@@ -51,7 +51,7 @@ const ExperienceBar = () => {
       level: level
     })
       .catch(error => {
-        console.error('更新參數出錯: ', error);
+        console.error('Update Params Error: ', error);
       });
   };
 
