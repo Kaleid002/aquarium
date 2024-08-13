@@ -12,7 +12,8 @@ import TaskModal from './Task/TaskModal';
 import FishFeed from './Feed/FishFeed';
 
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, route }) => {
+  const { userid } = route.params;
   const { picturebuttonvisible, slideLeft, slideRight, slideAnimation,
     toggleVisibility } = useHiddenAnimation();
 
@@ -30,7 +31,7 @@ const Home = ({ navigation }) => {
       <Animated.View style={{ opacity: opacityValue }}>
         <View style={{ flexDirection: 'row' }}>
           <Animated.View style={{ transform: [{ translateX: slideLeft }], width: '50%', height: '70%' }}>
-            <ExperienceBar />
+            <ExperienceBar ID={userid} />
 
             <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 40 }]} onPress={() => navigation.navigate('warehouse')}>
               <LinearGradient
@@ -92,7 +93,7 @@ const Home = ({ navigation }) => {
           <Animated.View style={{ transform: [{ translateX: slideRight }], width: '50%', height: '70%', alignItems: 'flex-end' }}>
             <Coin_Function />
 
-            <FishFeed onPress={buttonOpacityAnime} />
+            <FishFeed onPress={buttonOpacityAnime} ID={userid} />
 
             <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 100 }]}>
               <LinearGradient

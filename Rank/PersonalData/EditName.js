@@ -2,13 +2,17 @@ import { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity, Keyboard, Image } from 'react-native';
 import axios from 'axios';
 
-const EditName = () => {
+const EditName = ({ID}) => {
   const [editable, setEditable] = useState(false);
   const [text, setText] = useState('');
   const textInputRef = useRef(null);
 
   useEffect(() => {
-    axios.get('http://172.20.10.4:3000/personaldata/Name')
+    axios.get('http://172.20.10.4:3000/personaldata/Name', {
+      params: {
+        ID: ID
+      }
+    })
       .then(response => {
         setText(response.data[0].Name);
       })

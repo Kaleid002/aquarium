@@ -7,7 +7,7 @@ import InformationInterFace from './PersonalData/InterFace';
 import { LV_styles } from '../ScreenBackgroundStyles';
 import axios from 'axios';
 
-const ExperienceBar = () => {
+const ExperienceBar = ({ ID }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [currentExperience, setCurrentExperience] = useState(0);
@@ -19,7 +19,11 @@ const ExperienceBar = () => {
 
   //GET currentExperience
   useEffect(() => {
-    axios.get('http://172.20.10.4:3000/experiencebar')
+    axios.get('http://172.20.10.4:3000/experiencebar', {
+      params: {
+        ID: ID
+      }
+    })
       .then(response => {
         const { currentExperience } = response.data[0];
         setCurrentExperience(currentExperience);
@@ -96,21 +100,21 @@ const ExperienceBar = () => {
         </LinearGradient>
       </View>
 
-      <InformationInterFace visible={modalVisible} onClose={() => setModalVisible(false)} />
+      <InformationInterFace visible={modalVisible} onClose={() => setModalVisible(false)} ID={ID}/>
 
       <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 300 }]} onPress={() => handleExperienceUpdate()}>
-      <LinearGradient
-              colors={['rgba(255, 253, 253, 1)','rgba(82, 82, 82, 1)','rgba(0, 0, 0, 1)','rgba(64, 64, 64, 1)','rgba(255, 255, 255, 1)']}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={round_button_styles.buttontextframe}
-            >
-              <Text style={round_button_styles.buttonText}>EX</Text>
-            </LinearGradient>
-          <View
-            style={round_button_styles.buttonframe}
-          >
-          </View>
+        <LinearGradient
+          colors={['rgba(255, 253, 253, 1)', 'rgba(82, 82, 82, 1)', 'rgba(0, 0, 0, 1)', 'rgba(64, 64, 64, 1)', 'rgba(255, 255, 255, 1)']}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 0, y: 0 }}
+          style={round_button_styles.buttontextframe}
+        >
+          <Text style={round_button_styles.buttonText}>EX</Text>
+        </LinearGradient>
+        <View
+          style={round_button_styles.buttonframe}
+        >
+        </View>
       </TouchableOpacity>
     </View>
   );

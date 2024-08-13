@@ -6,13 +6,18 @@ import { round_button_styles } from '../ScreenBackgroundStyles';
 import handleButtonClick from './FishfeedClickFunction';
 import axios from 'axios';
 
-const FishFeed = ({ onPress }) => {
+const FishFeed = ({ onPress, ID }) => {
   const [Feedcount, setFeedcount] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    axios.get('http://172.20.10.4:3000/feed')
+    axios.get('http://172.20.10.4:3000/feed', {
+      params: {
+        ID: ID
+      }
+    })
       .then(response => {
+        console.log('Response data:', response.data);
         const { Feedcount } = response.data[0];
         setFeedcount(Feedcount);
       })

@@ -6,14 +6,18 @@ import Description from './Description';
 import TakePhotoFromAlbum from './Album/GetPhotos';
 import axios from 'axios';
 
-const InformationInterFace = ({ visible, onClose }) => {
+const InformationInterFace = ({ visible, onClose, ID }) => {
   const [level, setlevel] = useState('1');
   const [ImageURI, setImageURI] = useState(null);
 
   //GET level
   useEffect(() => {
     if (visible) {
-      axios.get('http://172.20.10.4:3000/experiencebar')
+      axios.get('http://172.20.10.4:3000/experiencebar', {
+        params: {
+          ID: ID
+        }
+      })
         .then(response => {
           const { level } = response.data[0];
           setlevel(level);
@@ -47,9 +51,9 @@ const InformationInterFace = ({ visible, onClose }) => {
                   {ImageURI && <Image source={{ uri: ImageURI }} style={Pofile_styles.AvatarImage} />}
                 </View>
 
-                <EditName />
+                <EditName ID={ID} />
 
-                <Description />
+                <Description ID={ID} />
               </View>
               <View style={Pofile_styles.RightFrame}>
                 <Text style={{ fontSize: 20 }}>等級: {level}</Text>

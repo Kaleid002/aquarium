@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import { View, StyleSheet, TextInput, KeyboardAvoidingView } from "react-native";
 import axios from "axios";
 
-const Description = () => {
+const Description = ({ ID }) => {
   const [text, setText] = useState('');
 
   useEffect(() => {
-    axios.get('http://172.20.10.4:3000/personaldata/Introduction')
+    axios.get('http://172.20.10.4:3000/personaldata/Introduction', {
+      params: {
+        ID: ID
+      }
+    })
       .then(response => {
         const { Introduction } = response.data[0];
         setText(Introduction);
