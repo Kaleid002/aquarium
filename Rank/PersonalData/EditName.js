@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity, Keyboard, Image } from 'react-native';
 import axios from 'axios';
 
-const EditName = ({ID}) => {
+const EditName = ({ ID }) => {
   const [editable, setEditable] = useState(false);
   const [text, setText] = useState('');
   const textInputRef = useRef(null);
@@ -23,7 +23,8 @@ const EditName = ({ID}) => {
 
   const saveTextToDatabase = async (text) => {
     axios.post('http://172.20.10.4:3000/personaldata/Name', {
-      Name: text
+        ID: ID,
+        Name: text
     })
       .catch(error => {
         console.error('Upadate Params Error(POST Name): ', error);

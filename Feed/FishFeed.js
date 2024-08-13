@@ -17,7 +17,6 @@ const FishFeed = ({ onPress, ID }) => {
       }
     })
       .then(response => {
-        console.log('Response data:', response.data);
         const { Feedcount } = response.data[0];
         setFeedcount(Feedcount);
       })
@@ -27,7 +26,7 @@ const FishFeed = ({ onPress, ID }) => {
   }, []);
 
   const handlePress = () => {
-    handleButtonClick(Feedcount, setFeedcount);
+    handleButtonClick(ID, Feedcount, setFeedcount);
     if (onPress) {
       onPress();
     }

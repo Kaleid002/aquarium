@@ -32,7 +32,7 @@ const Login = ({ navigation }) => {
       <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', borderWidth: 1 }}>
         <Modal animationType="slide" transparent={true} visible={modalVisible} supportedOrientations={['landscape']} onRequestClose={() => { setModalVisible(!modalVisible) }}>
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <View style={{ width: '40%', height: '80%', borderWidth: 3, justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'rgba(250,250,250,1)', borderColor: 'rgba(240,240,240,1)' }}>
+            <View style={{ width: '40%', height: '80%', borderWidth: 3, justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'rgba(250,250,250,1)', borderColor: 'rgba(240,240,240,1)',borderRadius:5 }}>
               <View style={{ flexDirection: 'row', width: '90%', height: '12%', borderRadius: 20, backgroundColor: 'rgba(255,255,247,0.4)', borderWidth: 1, borderColor: 'rgba(220,220,220,1)' }}>
                 <View style={{ width: '15%', height: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
                   <Image source={require('./assets/img/Account_Icon.png')} style={{ width: '45%', height: '60%' }} />

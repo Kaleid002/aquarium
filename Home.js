@@ -26,7 +26,7 @@ const Home = ({ navigation, route }) => {
         style={{ width: '100%', height: '100%', position: 'absolute' }}
         useNativeControls
         shouldPlay={true}
-        resizeMode="contain"
+        resizeMode="stretch"
       />
       <Animated.View style={{ opacity: opacityValue }}>
         <View style={{ flexDirection: 'row' }}>

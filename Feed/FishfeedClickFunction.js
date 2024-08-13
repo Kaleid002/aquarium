@@ -1,8 +1,10 @@
 import axios from "axios";
 
-const handleButtonClick = (Feedcount, setFeedcount) => {
+const handleButtonClick = (ID, Feedcount, setFeedcount) => {
+  console.log("ID:", ID);
   const newFeedCount = Feedcount + 1;
   axios.post('http://172.20.10.4:3000/feed', {
+    ID: ID,
     Feedcount: newFeedCount
   })
     .then(response => {

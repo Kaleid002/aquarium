@@ -22,6 +22,7 @@ const Description = ({ ID }) => {
 
   const saveTextToDatabase = async (text) => {
     axios.post('http://172.20.10.4:3000/personaldata/Introduction', {
+      ID:ID,
       Introduction: text
     })
       .then(response => {
