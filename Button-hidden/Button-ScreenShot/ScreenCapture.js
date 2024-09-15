@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Animated, Image, Alert, Modal, Easing } from 'react-native';
-import { captureScreen } from 'react-native-view-shot';
 import { Audio } from 'expo-av';
+import axios from 'axios';
 import * as MediaLibrary from 'expo-media-library';
 import { round_button_styles } from '../../ScreenBackgroundStyles';
 import { opacityAnimation } from '../OpacityAnime';
 import saveImage from './Peripheral-buttons/SaveImg';
 import Quit from './Peripheral-buttons/Quit';
 
-const HandleCapture = () => {
+const HandleCapture = ({ videoRef }) => {
   const { opacityValue, buttonOpacityAnime } = opacityAnimation();
 
   const [ImageURI, setImageURI] = useState(null);
@@ -35,16 +35,18 @@ const HandleCapture = () => {
       toValue: 0,
       duration: 200,
       useNativeDriver: false,
-    }).start(() => {
-      captureScreen({
-        format: 'png',
-        quality: 0.8,
-      }).then(uri => {
-        setImageURI(uri);
-        setdisable(true);
-      }).catch(error => {
-        console.error('ScreenShot failed:', error)
-      });
+    }).start(async () => {
+      if (videoRef.current) {
+        const timestamp = await videoRef.current.getStatusAsync();
+        axios.post('http://172.20.10.4:3000/ScreenCapture', {
+          timestamp: timestamp.positionMillis,
+        }).then((response) => {
+          setImageURI(response.data.image);
+          setdisable(true);
+        }).catch(error => {
+          console.error('ScreenShot failed:', error);
+        });
+      }
     });
   };
 
@@ -167,7 +169,7 @@ const Capture_styles = StyleSheet.create({
     borderRadius: 30,
     width: 60,
     height: 60,
-    borderColor: 'rgba(255,255,255,1)',
+    borderColor: 'rgba(100,100,100,1)',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -175,7 +177,7 @@ const Capture_styles = StyleSheet.create({
     width: '95%',
     height: '95%',
     borderRadius: 25,
-    backgroundColor: 'rgba(255,255,255,1)'
+    backgroundColor: 'rgba(100,100,100,1)'
   },
   pictureContainer: {
     width: '100%',
