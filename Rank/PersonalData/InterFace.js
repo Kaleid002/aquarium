@@ -23,7 +23,20 @@ const InformationInterFace = ({ visible, onClose, ID }) => {
           setlevel(level);
         })
         .catch(error => {
-          console.error('Upadate Params Error:', error);
+          console.error('Update Params Error:', error);
+        });
+
+      axios.get('http://172.20.10.4:3000/AvatarURI', {
+        params: {
+          ID: ID
+        }
+      })
+        .then(response => {
+          const { AvatarURI } = response.data[0];
+          setImageURI(AvatarURI);
+        })
+        .catch(error => {
+          console.error('Upload AvatarURI Error:', error);
         });
     }
   }, [visible]);
@@ -44,7 +57,7 @@ const InformationInterFace = ({ visible, onClose, ID }) => {
             <View style={Pofile_styles.modalContent}>
               <View style={Pofile_styles.LeftFrame}>
                 <View style={Pofile_styles.AvatarBorder}>
-                  <TouchableOpacity style={Pofile_styles.OpenAlbumButton} onPress={() => TakePhotoFromAlbum(ImageURI, setImageURI)}>
+                  <TouchableOpacity style={Pofile_styles.OpenAlbumButton} onPress={() => TakePhotoFromAlbum({ ID }, setImageURI)}>
                     <Image source={require('../../assets/img/OpenAlbum_Icon.png')} style={Pofile_styles.OpenAlbumIcon} />
                   </TouchableOpacity>
                   <Image source={require('../../assets/img/AvatarFrame_Icon.png')} style={Pofile_styles.AvatarFrameIcon} />
