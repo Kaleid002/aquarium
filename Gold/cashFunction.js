@@ -2,19 +2,22 @@ import { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Image, Animated } from "react-native";
 import axios from "axios";
 
-const Coin_Function = () =>{
+const Coin_Function = ({ ID }) => {
   const [coins, setCoins] = useState(0);
 
-  useEffect(() =>{
-    axios.get('http://172.20.10.4:3000/coin')
-        .then(response => {
-          const { Coins } = response.data[0];
-          setCoins(Coins);
-        })
-        .catch(error => {
-          console.error('获取参数时出错(coin):', error);
-        });
-  },[]);
+  useEffect(() => {
+    axios.get('http://172.20.10.4:3000/coin', {
+      params: {
+        ID: ID
+      }
+    }).then(response => {
+      const { Coins } = response.data[0];
+      setCoins(Coins);
+    })
+      .catch(error => {
+        console.error('获取参数时出错(coin):', error);
+      });
+  }, []);
 
   const coinAnimation = (rewardCoins) => {
     const startValue = coins;
@@ -30,13 +33,13 @@ const Coin_Function = () =>{
       useNativeDriver: false,
     }).start();
   };
-  
-  return(
-    <View style={ Coin_Styles.coincontainer }>
-      <Text style={{ margin: 5, textAlign: 'right', fontSize:16, fontWeight: 'bold', color:"white", textShadowRadius: 1, textShadowColor: 'black'}}>{coins}</Text>
-      <Image 
+
+  return (
+    <View style={Coin_Styles.coincontainer}>
+      <Text style={{ margin: 5, textAlign: 'right', fontSize: 16, fontWeight: 'bold', color: "white", textShadowRadius: 1, textShadowColor: 'black' }}>{coins}</Text>
+      <Image
         source={require('../assets/img/Gold_Icon.png')}
-        style={{ width: 65, height: 65, right:25,top:-47, }}
+        style={{ width: 65, height: 65, right: 25, top: -47, }}
       />
     </View>
   );

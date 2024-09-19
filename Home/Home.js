@@ -117,7 +117,7 @@ const Home = ({ navigation, route }) => {
           </Animated.View>
 
           <Animated.View style={{ transform: [{ translateX: slideRight }], width: '50%', height: '70%', alignItems: 'flex-end' }}>
-            <Coin_Function />
+            <Coin_Function ID = {userid}/>
 
             <FishFeed onPress={buttonOpacityAnime} ID={userid} />
 

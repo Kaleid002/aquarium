@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { round_button_styles } from '../ScreenBackgroundStyles';
-import Level from './Level';
 import InformationInterFace from './PersonalData/InterFace';
 import { LV_styles } from '../ScreenBackgroundStyles';
 import axios from 'axios';
@@ -11,22 +10,24 @@ const ExperienceBar = ({ ID }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [currentExperience, setCurrentExperience] = useState(0);
-  const { level, totalExperience, updateLevelAndExperience } = Level();
+  const [level, setlevel] = useState(1);
+  const [totalExperience, setTotalExperience] = useState(100);
   const Rank_styles = LV_styles();
   const experiencePercentage = (currentExperience / totalExperience) * 100;
 
   const animatedProgress = new Animated.Value(0);
 
-  //GET currentExperience
   useEffect(() => {
     axios.get('http://172.20.10.4:3000/experiencebar', {
       params: {
         ID: ID
       }
     })
-      .then(response => {
-        const { currentExperience } = response.data[0];
+      .then((response) => {
+        const { currentExperience, totalExperience, level } = response.data[0];
         setCurrentExperience(currentExperience);
+        setlevel(level);
+        setTotalExperience(totalExperience);
       })
       .catch(error => {
         console.error('Update Error:', error);
@@ -36,7 +37,7 @@ const ExperienceBar = ({ ID }) => {
   useEffect(() => {
     if (experiencePercentage >= 100) {
       setCurrentExperience(currentExperience - totalExperience);
-      updateLevelAndExperience(experiencePercentage);
+      updateLevelAndExperience();
     }
 
     Animated.timing(animatedProgress, {
@@ -50,6 +51,7 @@ const ExperienceBar = ({ ID }) => {
     setCurrentExperience(currentExperience + 100);
 
     axios.post('http://172.20.10.4:3000/experiencebar', {
+      ID: ID,
       currentExperience: currentExperience,
       totalExperience: totalExperience,
       level: level
@@ -59,6 +61,12 @@ const ExperienceBar = ({ ID }) => {
       });
   };
 
+  const updateLevelAndExperience = () => {
+    if (experiencePercentage >= 100) {
+      setlevel(level + 1);
+      setTotalExperience(totalExperience * 1.5);
+    }
+  };
   return (
     <View>
       <View style={experienceBar_styles.experienceBarframe}>
@@ -100,7 +108,7 @@ const ExperienceBar = ({ ID }) => {
         </LinearGradient>
       </View>
 
-      <InformationInterFace visible={modalVisible} onClose={() => setModalVisible(false)} ID={ID}/>
+      <InformationInterFace visible={modalVisible} onClose={() => setModalVisible(false)} ID={ID} />
 
       <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 300 }]} onPress={() => handleExperienceUpdate()}>
         <LinearGradient

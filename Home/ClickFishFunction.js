@@ -89,7 +89,7 @@ const SpeciesIntroduction_styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   IntroductionTextstyle: {
-    fontSize: 28
+    fontSize: 20
   },
   CloseButtonContainer: {
     position: 'absolute',
