@@ -13,6 +13,7 @@ import Coin_Function from '../Gold/cashFunction';
 import TaskModal from '../Task/TaskModal';
 import FishFeed from '../Feed/FishFeed';
 import SpeciesIntroductionFrame from './ClickFishFunction';
+import TargetSelect from '../Task/TargetSelect';
 
 
 const Home = ({ navigation, route }) => {
@@ -69,6 +70,10 @@ const Home = ({ navigation, route }) => {
         <SpeciesIntroductionFrame visible={modalVisible} setvisible={setmodalVisible} fishData={fishdata} />
       </View>
 
+      <View style={{ width: '100%', height: '100%', position: 'absolute' }}>
+        <TargetSelect ID={userid}/>
+      </View>
+
       <Animated.View style={{ opacity: opacityValue }}>
         <View style={{ flexDirection: 'row' }}>
           <Animated.View style={{ transform: [{ translateX: slideLeft }], width: '50%', height: '70%' }}>
@@ -94,7 +99,7 @@ const Home = ({ navigation, route }) => {
 
             </TouchableOpacity>
 
-            <TaskModal />
+            <TaskModal ID={userid} />
 
             <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 40 }]} onPress={() => navigation.navigate('store')}>
               <LinearGradient
@@ -117,7 +122,7 @@ const Home = ({ navigation, route }) => {
           </Animated.View>
 
           <Animated.View style={{ transform: [{ translateX: slideRight }], width: '50%', height: '70%', alignItems: 'flex-end' }}>
-            <Coin_Function ID = {userid}/>
+            <Coin_Function ID={userid} />
 
             <FishFeed onPress={buttonOpacityAnime} ID={userid} />
 

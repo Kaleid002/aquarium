@@ -4,55 +4,23 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { round_button_styles } from '../ScreenBackgroundStyles';
 import axios from 'axios';
 
-const TaskModal = () => {
+const TaskModal = ({ID}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [tasks, setTasks] = useState([]);
-
-  const [animations, setAnimations] = useState([]);
-
   useEffect(() => {
-    if (modalVisible) {
-      axios.get('http://172.20.10.4:3000/tasks')
-        .then(response => {
-          setTasks(response.data);
-          setAnimations(response.data.map(() => new Animated.Value(1)));
-        })
-        .catch(error => {
-          console.error('Error fetching tasks:', error);
-        });
-    }
-  }, [modalVisible]);
-
-  const setRewardFunction = (index) => {
-    console.log(tasks[index].TaskID);
-    axios.post('http://172.20.10.4:3000/taskID', {
-      TaskID: tasks[index].TaskID
+    axios.get('http://172.20.10.4:3000/usertarget', {
+      params: {
+        ID: ID
+      }
     })
-      .then(() => {
-        StartAnimation(index);
+      .then((response) => {
+        console.log(response.data);
       })
       .catch(error => {
-        console.error('update parameter(received) Error: ', error);
+        console.error('Update Error:', error);
       });
-  }
-  const StartAnimation = (index) => {
-    Animated.timing(animations[index], {
-      toValue: 0,
-      duration: 800,
-      useNativeDriver: false,
-      easing: Easing.linear
-    }).start(() => {
-      axios.get('http://172.20.10.4:3000/tasks')
-        .then(response => {
-          setTasks(response.data);
-        })
-    })
-  };
+  }, []);
 
-
-  const incomplete = tasks.filter(task => task.Complete === 0);
-  const complete = tasks.filter(task => task.Complete === 1);
   return (
     <View>
       <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 40 }]} onPress={() => setModalVisible(true)}>
@@ -74,7 +42,7 @@ const TaskModal = () => {
         </View>
       </TouchableOpacity>
 
-      <Modal animationType="fade" transparent={true} visible={modalVisible} supportedOrientations={['landscape']} onRequestClose={() => { setModalVisible(!modalVisible) }}>
+      {/*<Modal animationType="fade" transparent={true} visible={modalVisible} supportedOrientations={['landscape']} onRequestClose={() => { setModalVisible(!modalVisible) }}>
         <View style={Modal_styles.modalContainer}>
           <LinearGradient
             colors={['rgba(140, 82, 255, 0.8)', 'rgba(92, 225, 230, 0.6)']}
@@ -147,9 +115,8 @@ const TaskModal = () => {
               </View>
               <View style={Modal_styles.separator} />
               <View style={Modal_styles.innerFrame}>
-                <ScrollView horizontal='true'
+                 <ScrollView horizontal='true'
                   contentContainerStyle={Modal_styles.scorollviewContainer}>
-                  {incomplete.map(task => (
                     <LinearGradient
                       key={task.TaskID}
                       colors={['rgba(140, 82, 255, 0.6)', 'rgba(18, 98, 123, 0.4)']}
@@ -159,11 +126,9 @@ const TaskModal = () => {
                     >
                       <Animated.View style={Modal_styles.taskContainer}>
                         <Text style={Modal_styles.task}>{task.Task_name}</Text>
-                        <Text>未完成</Text>
+                        <Text>未達成</Text>
                       </Animated.View>
                     </LinearGradient>
-                  ))}
-                  {complete.map(task => (
                     <LinearGradient
                       key={task.TaskID}
                       colors={['rgba(140, 82, 255, 0.6)', 'rgba(18, 98, 123, 0.4)']}
@@ -173,34 +138,26 @@ const TaskModal = () => {
                     >
                       <Animated.View style={Modal_styles.taskContainer}>
                         <Text style={Modal_styles.task}>{task.Task_name}</Text>
-                        <Text>完成</Text>
+                        <Text>達成</Text>
                       </Animated.View>
-                    </LinearGradient>
-                  ))}
+                    </LinearGradient> 
                 </ScrollView>
               </View>
-              <TouchableOpacity style={{ position: 'absolute', top: 1, right: 25 }} onPress={() => setModalVisible(false)}>
-                <LinearGradient
-                  colors={['rgba(255, 0, 0, 0)', 'rgba(255, 0, 0, 0.8)', 'rgba(255, 0, 0, 0.7)', 'rgba(255, 0, 0, 0.4)', 'rgba(255, 0, 0, 1)', 'rgba(255, 0, 0, 0.1)']}
-                  start={{ x: 0, y: 0.1 }}
-                  end={{ x: 1, y: 0.9 }}
-                  style={Modal_styles.colseButton}
-                >
-                  <Text style={Modal_styles.closeButtonText}>X</Text>
-                </LinearGradient>
+              <TouchableOpacity style={Modal_styles.colsebutton} onPress={() => setModalVisible(!modalVisible)}>
+                <Image source={require('../assets/img/Close_Icon.png')} style={Modal_styles.closeIcon} />
               </TouchableOpacity>
             </LinearGradient>
           </LinearGradient>
         </View>
-      </Modal >
+      </Modal >*/}
     </View >
   );
 };
 
 const Modal_styles = StyleSheet.create({
-  buttonimage:{
-    width:'100%',
-    height:'100%',
+  buttonimage: {
+    width: '100%',
+    height: '100%',
   },
   modalContainer: {
     flex: 1,
@@ -302,22 +259,20 @@ const Modal_styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
   },
-  colseButton: {
+  colsebutton: {
     position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
     width: 25,
     height: 25,
-    borderWidth: 1,
-    borderRadius: 50,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-    marginBottom: 10,
+    top: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 30,
+    zIndex: 1
   },
-  closeButtonText: {
-    fontSize: 15,
-    color: 'rgba(0, 0, 0, 0.6)',
-    textAlign: 'center',
-  },
+  closeIcon: {
+    width: '100%',
+    height: '100%'
+  }
 });
 
 export default TaskModal;
