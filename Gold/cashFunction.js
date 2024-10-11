@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { View, StyleSheet, Text, Image, Animated } from "react-native";
 import axios from "axios";
+import { AppContext } from "../Context";
 
 const Coin_Function = ({ ID }) => {
+  const { getcoin, setgetcoin } = useContext(AppContext);
   const [coins, setCoins] = useState(0);
 
   useEffect(() => {
@@ -19,19 +21,38 @@ const Coin_Function = ({ ID }) => {
       });
   }, []);
 
+  useEffect(() => {
+    if (getcoin !== 0) {
+      coinAnimation(getcoin);
+    }
+  }, [getcoin]);
+
   const coinAnimation = (rewardCoins) => {
     const startValue = coins;
     const endValue = startValue + rewardCoins;
-    const animation = new Animated.Value(0);
+    const animation = new Animated.Value(startValue);
+
     animation.addListener(({ value }) => {
-      const newValue = Math.floor(value * (endValue - startValue)) + startValue;
-      setCoins(newValue);
+      console.log(value);
+      setCoins(Math.floor(value));
     });
+
     Animated.timing(animation, {
-      toValue: 1,
+      toValue: endValue,
       duration: 1000,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      axios.post('http://172.20.10.4:3000/coin', {
+        ID: ID,
+        coin: endValue
+      })
+        .then(() => {
+          setgetcoin(0);
+        })
+        .catch(error => {
+          console.error('Update coins Error: ', error);
+        });
+    });
   };
 
   return (

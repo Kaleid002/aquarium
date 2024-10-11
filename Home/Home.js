@@ -18,6 +18,7 @@ import TargetSelect from '../Task/TargetSelect';
 
 const Home = ({ navigation, route }) => {
   const { userid } = route.params;
+
   const { picturebuttonvisible, slideLeft, slideRight, slideAnimation,
     toggleVisibility } = useHiddenAnimation();
 
@@ -71,7 +72,7 @@ const Home = ({ navigation, route }) => {
       </View>
 
       <View style={{ width: '100%', height: '100%', position: 'absolute' }}>
-        <TargetSelect ID={userid}/>
+        <TargetSelect ID={userid} />
       </View>
 
       <Animated.View style={{ opacity: opacityValue }}>
@@ -79,7 +80,7 @@ const Home = ({ navigation, route }) => {
           <Animated.View style={{ transform: [{ translateX: slideLeft }], width: '50%', height: '70%' }}>
             <ExperienceBar ID={userid} />
 
-            <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 40 }]} onPress={() => navigation.navigate('warehouse')}>
+            <TouchableOpacity style={[round_button_styles.buttonContainer, { marginTop: 100 }]} onPress={() => navigation.navigate('warehouse')}>
               <LinearGradient
                 colors={['rgba(255, 253, 253, 1)', 'rgba(82, 82, 82, 1)', 'rgba(0, 0, 0, 1)', 'rgba(64, 64, 64, 1)', 'rgba(255, 255, 255, 1)']}
                 start={{ x: 0, y: 1 }}
@@ -101,7 +102,7 @@ const Home = ({ navigation, route }) => {
 
             <TaskModal ID={userid} />
 
-            <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 40 }]} onPress={() => navigation.navigate('store')}>
+            <TouchableOpacity style={[round_button_styles.buttonContainer]} onPress={() => navigation.navigate('store', { userid: userid })} >
               <LinearGradient
                 colors={['rgba(255, 253, 253, 1)', 'rgba(82, 82, 82, 1)', 'rgba(0, 0, 0, 1)', 'rgba(64, 64, 64, 1)', 'rgba(255, 255, 255, 1)']}
                 start={{ x: 0, y: 1 }}
@@ -148,7 +149,7 @@ const Home = ({ navigation, route }) => {
         </View>
 
 
-        <View style={{ flexDirection: 'row', top: 120 }}>
+        <View style={{ flexDirection: 'row', marginTop: 70, justifyContent: 'flex-start', alignContent: 'baseline' }}>
           <TouchableOpacity style={[round_button_styles.buttonContainer, { shadowColor: 'rgba(255, 255, 255, 1)', shadowOpacity: 1, shadowRadius: 10 }]} onPress={toggleVisibility}>
             <View
               style={round_button_styles.buttonframe}

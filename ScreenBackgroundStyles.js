@@ -29,7 +29,7 @@ export const round_button_styles = StyleSheet.create({
     height: 50,
     marginHorizontal: 15,
     marginBottom:10,
-    justifyContent:'center',
+    justifyContent:'center'
   },
   buttonframe: {
     height: '100%',

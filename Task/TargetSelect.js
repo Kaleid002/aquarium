@@ -37,7 +37,6 @@ const TargetSelect = ({ ID }) => {
       }
     })
       .then((response) => {
-        console.log(response.data);
         settarget(response.data.map(item => item));
       })
       .catch(error => {
