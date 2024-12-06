@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { round_button_styles } from '../ScreenBackgroundStyles';
@@ -7,7 +7,7 @@ import { LV_styles } from '../ScreenBackgroundStyles';
 import axios from 'axios';
 import { AppContext } from '../Context';
 
-const ExperienceBar = ({ ID }) => {
+const ExperienceBar = ({ ID, onTriggerNotification }) => {
   const { getexperience } = useContext(AppContext);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -16,9 +16,8 @@ const ExperienceBar = ({ ID }) => {
   const [level, setlevel] = useState(1);
   const [totalExperience, setTotalExperience] = useState(100);
   const Rank_styles = LV_styles();
-  const experiencePercentage = (currentExperience / totalExperience) * 100;
 
-  const animatedProgress = new Animated.Value(0);
+  const animatedProgress = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     axios.get('http://172.20.10.4:3000/experiencebar', {
@@ -26,7 +25,7 @@ const ExperienceBar = ({ ID }) => {
         ID: ID
       }
     })
-      .then((response) => {
+      .then(response => {
         const { currentExperience, totalExperience, level } = response.data[0];
         setCurrentExperience(currentExperience);
         setlevel(level);
@@ -38,37 +37,39 @@ const ExperienceBar = ({ ID }) => {
   }, []);
 
   useEffect(() => {
-    if (experiencePercentage >= 100) {
-      setCurrentExperience(currentExperience - totalExperience);
-      updateLevelAndExperience();
+    if (getexperience != 0) {
+      const newExperience = currentExperience + getexperience;
+
+      if (newExperience >= totalExperience) {
+        setCurrentExperience(newExperience - totalExperience);
+        setlevel(level + 1);
+        setTotalExperience(totalExperience * 1.5);
+        //onTriggerNotification('Level', level + 1);
+      } else {
+        setCurrentExperience(newExperience);
+      }
+
+      axios.post('http://172.20.10.4:3000/experiencebar', {
+        ID,
+        currentExperience: currentExperience + getexperience,
+        totalExperience,
+        level
+      })
+        .catch(error => {
+          console.error('Update Params Error: ', error);
+        });
     }
-
-    Animated.timing(animatedProgress, {
-      toValue: (currentExperience / totalExperience) * 100,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  }, [currentExperience, totalExperience, experiencePercentage, updateLevelAndExperience]);
-  useEffect(() => {
-    setCurrentExperience(currentExperience + getexperience);
-
-    axios.post('http://172.20.10.4:3000/experiencebar', {
-      ID: ID,
-      currentExperience: currentExperience,
-      totalExperience: totalExperience,
-      level: level
-    })
-      .catch(error => {
-        console.error('Update Params Error: ', error);
-      });
   }, [getexperience])
 
-  const updateLevelAndExperience = () => {
-    if (experiencePercentage >= 100) {
-      setlevel(level + 1);
-      setTotalExperience(totalExperience * 1.5);
-    }
-  };
+  useEffect(() => {
+    const progress = (currentExperience / totalExperience) * 100;
+    Animated.timing(animatedProgress, {
+      toValue: progress,
+      duration: 300,
+      useNativeDriver: false,
+    }).start()
+  }, [currentExperience, totalExperience]);
+
   return (
     <View>
       <View style={experienceBar_styles.experienceBarframe}>
@@ -145,6 +146,8 @@ const experienceBar_styles = StyleSheet.create({
   experienceBar: {
     width: '100%',
     height: '10%',
+    borderTopWidth: 1,
+    borderBottomWidth: 1
   },
   experienceText: {
     height: '50%',

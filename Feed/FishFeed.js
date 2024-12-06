@@ -50,9 +50,10 @@ const FishFeed = ({ onPress, ID }) => {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: throttle((evt, gesturestate) => {
+      onPanResponderMove: (evt, gesturestate) => {
+        //console.log(gesturestate.dx);
         setServoAngle(gesturestate.dx);
-      }, 100),
+      },
       onPanResponderRelease: () => {
         setServoAngle(0);
       },
@@ -82,7 +83,7 @@ const FishFeed = ({ onPress, ID }) => {
       </TouchableOpacity>
 
       <Modal animationType='fade' transparent={true} visible={modalVisible} supportedOrientations={['landscape']} onRequestClose={() => { setModalVisible(!modalVisible) }}>
-        <View {...panResponder.panHandlers} style={{ flex: 1, borderWidth: 5, backgroundColor: 'red', opacity: 0 }} />
+        <View {...panResponder.panHandlers} style={{ flex: 1, borderWidth: 5, backgroundColor: 'red', opacity: 0.02 }} />
       </Modal>
     </View>
 

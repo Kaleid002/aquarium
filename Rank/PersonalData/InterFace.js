@@ -9,9 +9,19 @@ import axios from 'axios';
 const InformationInterFace = ({ visible, onClose, ID }) => {
   const [level, setlevel] = useState('1');
   const [ImageURI, setImageURI] = useState(null);
+  const [days, setdays] = useState(0);
+  const [name, setname] = useState([]);
 
-  //GET level
   useEffect(() => {
+    axios.get('http://172.20.10.4:3000/personaldata/days', {
+      params: {
+        ID: ID
+      }
+    })
+      .then(response => {
+        setdays(response.data[0].Days);
+      })
+
     if (visible) {
       axios.get('http://172.20.10.4:3000/experiencebar', {
         params: {
@@ -38,6 +48,14 @@ const InformationInterFace = ({ visible, onClose, ID }) => {
         .catch(error => {
           console.error('Upload AvatarURI Error:', error);
         });
+
+      axios.get('http://172.20.10.4:3000/AchievementRecord', {
+        params: {
+          ID: ID
+        }
+      }).then(response => {
+        setname(response.data);
+      });
     }
   }, [visible]);
   return (
@@ -69,12 +87,18 @@ const InformationInterFace = ({ visible, onClose, ID }) => {
                 <Description ID={ID} />
               </View>
               <View style={Pofile_styles.RightFrame}>
-                <Text style={{ fontSize: 20 }}>等級: {level}</Text>
-                <View style={{ flexDirection: 'row', borderWidth: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
-                  <Text style={{ fontSize: 20, marginVertical: 5 }}>成就:</Text>
-                  <Text style={{ fontSize: 20, marginVertical: 5, }}>累計登入:</Text>
+                <Text style={{ fontSize: 30,color:'rgba(140, 82, 255,1)' }}>LV: {level}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: '10%' }}>
+                  <Text style={{ fontSize: 20,color:'rgba(140, 82, 255,1)' }}>完成成就: {name.length} 個</Text>
+                  <Text style={{ fontSize: 20,color:'rgba(140, 82, 255,1)' }}>累計登入: {days} 日</Text>
                 </View>
-                <Text style={{ fontSize: 25, marginVertical: 5 }}>魚缸生物</Text>
+                <Text style={{ fontSize: 20, marginVertical: '5%',color:'rgba(140, 82, 255,1)' }}>稱號:</Text>
+                <View style={{ width: '100%', height: '45%', borderRadius: 5, backgroundColor: 'rgba(255,255,255,0.2)', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                  {name.map((item, index) => (
+                    <Text key={index} style={{ height: '20%', width: 'auto', fontSize: 20, textAlign: 'center', color: 'rgba(250,250,250,1)', textShadowColor: 'rgba(255,255,255,1)', textAlignVertical: 'center', borderWidth: 1, borderRadius: 3, borderColor: 'rgba(255,255,255,0.3)', margin: '2%', shadowColor: 'rgba(0,200,255,0.3)', shadowOpacity: 1, backgroundColor: 'rgba(255,255,255,0.3)' }}>{item.Name}</Text>
+                  ))}
+
+                </View>
               </View>
             </View>
           </LinearGradient>

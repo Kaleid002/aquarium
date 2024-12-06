@@ -4,8 +4,7 @@ import axios from "axios";
 import { AppContext } from "../Context";
 
 const Coin_Function = ({ ID }) => {
-  const { getcoin, setgetcoin } = useContext(AppContext);
-  const [coins, setCoins] = useState(0);
+  const { coins, setCoins, getcoin, setgetcoin } = useContext(AppContext);
 
   useEffect(() => {
     axios.get('http://172.20.10.4:3000/coin', {
@@ -22,6 +21,7 @@ const Coin_Function = ({ ID }) => {
   }, []);
 
   useEffect(() => {
+    console.log('coinfunction is enable!');
     if (getcoin !== 0) {
       coinAnimation(getcoin);
     }
@@ -57,7 +57,7 @@ const Coin_Function = ({ ID }) => {
 
   return (
     <View style={Coin_Styles.coincontainer}>
-      <Text style={{ margin: 5, textAlign: 'right', fontSize: 16, fontWeight: 'bold', color: "white", textShadowRadius: 1, textShadowColor: 'black' }}>{coins}</Text>
+      <Text style={Coin_Styles.numbercontainer}>{coins}</Text>
       <Image
         source={require('../assets/img/Gold_Icon.png')}
         style={{ width: 65, height: 65, right: 25, top: -47, }}
@@ -81,6 +81,15 @@ const Coin_Styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 3,
   },
+  numbercontainer: {
+    margin: 5,
+    textAlign: 'right',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: "white",
+    textShadowRadius: 1,
+    textShadowColor: 'black'
+  }
 });
 
 export default Coin_Function;

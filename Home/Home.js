@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Text, View, TouchableOpacity, Animated, Image, PanResponder } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Video } from 'expo-av';
@@ -14,11 +14,13 @@ import TaskModal from '../Task/TaskModal';
 import FishFeed from '../Feed/FishFeed';
 import SpeciesIntroductionFrame from './ClickFishFunction';
 import TargetSelect from '../Task/TargetSelect';
+import Notification from '../Achievement/AchievementNotification';
+import { AppContext } from '../Context';
 
 
 const Home = ({ navigation, route }) => {
   const { userid } = route.params;
-
+  const { achievementNotifydisable } = useContext(AppContext);
   const { picturebuttonvisible, slideLeft, slideRight, slideAnimation,
     toggleVisibility } = useHiddenAnimation();
 
@@ -27,15 +29,21 @@ const Home = ({ navigation, route }) => {
   const videoRef = useRef(null);
   const [fishdata, setfishdata] = useState('');
   const [modalVisible, setmodalVisible] = useState(false);
+  const [Days, setDays] = useState(0);
+  const [notificationParams, setNotificationParams] = useState(null);
+
+  const handleNotificationTrigger = (type, value) => {
+    setNotificationParams({type, value });
+  };
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderRelease: async (event, gesturestate) => {
-        const { moveX, moveY } = gesturestate;
+        const { x0, y0} = gesturestate;
         if (videoRef.current) {
           const timestamp = await videoRef.current.getStatusAsync();
-          console.log(`Touch Position: (${moveX}, ${moveY})`);
+          console.log(`Touch Position: (${x0}, ${y0})`);
           axios.post('http://172.20.10.4:3000/VideoParameter', {
             timestamp: timestamp.positionMillis,
             x: moveX,
@@ -50,10 +58,19 @@ const Home = ({ navigation, route }) => {
     }),
   ).current;
 
-
+  useEffect(() => {
+    axios.get('http://172.20.10.4:3000/personaldata/days', {
+      params: {
+        ID: userid
+      }
+    })
+      .then(response => {
+        setDays(response.data[0].Days);
+      })
+  }, []);
 
   return (
-    <View {...panResponder.panHandlers} style={{ flex: 1 }}>
+    <View {...panResponder.panHandlers} style={{ flex: 1, alignItems: 'center' }}>
 
       <View style={{ width: '100%', height: '100%', position: 'absolute' }}>
         <Video
@@ -64,8 +81,17 @@ const Home = ({ navigation, route }) => {
           shouldPlay={true}
           resizeMode="stretch"
         />
-
       </View>
+
+      <View style={{ position: 'absolute', height: '20%', width: '45%', bottom: '10%' }} pointerEvents="none">
+      {notificationParams && (
+        <Notification
+          ID={userid}
+          type={notificationParams.type}
+          value={notificationParams.value}
+        />
+      )}
+       </View>
 
       <View style={{ width: '100%', height: '100%', position: 'absolute' }}>
         <SpeciesIntroductionFrame visible={modalVisible} setvisible={setmodalVisible} fishData={fishdata} />
@@ -78,7 +104,7 @@ const Home = ({ navigation, route }) => {
       <Animated.View style={{ opacity: opacityValue }}>
         <View style={{ flexDirection: 'row' }}>
           <Animated.View style={{ transform: [{ translateX: slideLeft }], width: '50%', height: '70%' }}>
-            <ExperienceBar ID={userid} />
+            <ExperienceBar ID={userid} onTriggerNotification={handleNotificationTrigger} />
 
             <TouchableOpacity style={[round_button_styles.buttonContainer, { marginTop: 100 }]} onPress={() => navigation.navigate('warehouse')}>
               <LinearGradient
@@ -127,7 +153,7 @@ const Home = ({ navigation, route }) => {
 
             <FishFeed onPress={buttonOpacityAnime} ID={userid} />
 
-            <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 100 }]}>
+            <TouchableOpacity style={[round_button_styles.buttonContainer, { top: 100 }]} onPress={() => navigation.navigate('achievement', { userid: userid })}>
               <LinearGradient
                 colors={['rgba(255, 253, 253, 1)', 'rgba(82, 82, 82, 1)', 'rgba(0, 0, 0, 1)', 'rgba(64, 64, 64, 1)', 'rgba(255, 255, 255, 1)']}
                 start={{ x: 0, y: 1 }}
@@ -144,6 +170,10 @@ const Home = ({ navigation, route }) => {
                   style={round_button_styles.AchievementIcon}
                 />
               </View>
+              {!achievementNotifydisable &&
+                <View style={{ position: 'absolute', width: '40%', height: '40%', right: -5, bottom: -5, borderRadius: 100, backgroundColor: 'rgba(255,200,0,1)', justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ fontSize: 15, color: 'rgba(255,0,0,0.9)', fontWeight: 'bold' }}>!</Text>
+                </View>}
             </TouchableOpacity>
           </Animated.View>
         </View>

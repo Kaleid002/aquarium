@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
-import { Modal, View, Text, Image, StyleSheet, TouchableOpacity, Animated, Easing, ScrollView } from 'react-native';
+import { Modal, View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { round_button_styles } from '../ScreenBackgroundStyles';
+import Notification from '../Achievement/AchievementNotification';
 import { AppContext } from '../Context';
 import axios from 'axios';
 
@@ -9,6 +10,7 @@ const TaskModal = ({ ID }) => {
   const { setgetexperience, setgetcoin } = useContext(AppContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [target, settarget] = useState();
+  const [Tasknum, setTasknum] = useState();
   const [task, settask] = useState([
     { "Target": "5人達成目標", "number": 5, "status": 0 },
     { "Target": "10人達成目標", "number": 10, "status": 0 },
@@ -77,6 +79,12 @@ const TaskModal = ({ ID }) => {
         const updatedTasks = [...task];
         updatedTasks[index].status = 2;
         settask(updatedTasks);
+      }).then(() => {
+        axios.post('http://172.20.10.4:3000/personaldata/Tasknum', {
+          ID: ID,
+        }).then(response => {
+          setTasknum(response.data[0].Tasknum);
+        })
       })
       .catch((error) => {
         console.error('Upadate Params Error(POST user_target): ', error);
@@ -103,6 +111,11 @@ const TaskModal = ({ ID }) => {
             source={require('../assets/img/Task_Icon.png')}
             style={Modal_styles.buttonimage}
           />
+          {task.some(item => item.status === 1) && (
+            <View style={{ position: 'absolute', width: '40%', height: '40%', right: -5, bottom: -5, borderRadius: 100, backgroundColor: 'rgba(255,200,0,1)', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ fontSize: 15, color: 'rgba(255,0,0,0.9)', fontWeight: 'bold' }}>!</Text>
+            </View>
+          )}
         </View>
       </TouchableOpacity>
 
@@ -121,6 +134,11 @@ const TaskModal = ({ ID }) => {
               style={Modal_styles.modalContent}
             >
               <View style={Modal_styles.TopModalFrame}>
+                {task.every(item => item.status === 2) && (
+                  <Text style={{ position: 'absolute', width: '100%', height: '100%', textAlign: 'center', fontSize: 25, color: 'rgba(255,255,255,1)' }}>
+                    所有獎勵已領取!
+                  </Text>
+                )}
                 <View style={Modal_styles.rewardframe}>
                   {task.map((item, index) => (
                     <TouchableOpacity key={index} style={{ width: '20%', height: '80%', justifyContent: 'center', alignItems: 'center', opacity: item.status == 2 ? 0 : item.status == 1 ? 1 : 0.2 }} onPress={() => claimReward(index)} disabled={item.status !== 1}>
@@ -173,7 +191,7 @@ const TaskModal = ({ ID }) => {
                     }
                   </LinearGradient>
                 </View>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} contentContainerStyle={Modal_styles.scorollviewContainer} style={{ width: '75%', height: '100%', borderRadius: 2 }}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} contentContainerStyle={Modal_styles.scorollviewContainer} style={{ width: '100%', height: '100%', borderRadius: 2 }}>
                   {target && task.map((item, index) => (
                     <View key={index} style={Modal_styles.taskborderContainer}>
                       <Text style={{ fontSize: 16, textAlign: 'center' }}>{item.Target}</Text>
@@ -191,7 +209,12 @@ const TaskModal = ({ ID }) => {
               </TouchableOpacity>
             </LinearGradient>
           </LinearGradient>
+
+          <View style={{ position: 'absolute', height: '20%', width: '45%', bottom: '10%' }} pointerEvents="none">
+            <Notification ID={ID} type='Tasknum' value={Tasknum} />
+          </View>
         </View>
+
       </Modal >
     </View >
   );
@@ -276,20 +299,20 @@ const Modal_styles = StyleSheet.create({
     alignItems: 'center',
   },
   scorollviewContainer: {
-    height: '100%',
-    width: '100%',
+    flexGrow: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
   taskborderContainer: {
     height: '90%',
-    width: '25%',
-    margin: '2%',
-    borderRadius: 5,
+    width: '18%',
+    marginHorizontal: '1%',
+    borderRadius: 2,
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderWidth: 1
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.4)'
   },
   task: {
     fontSize: 16,
