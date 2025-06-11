@@ -699,7 +699,7 @@ app.get('/achievement', async (req, res) => {
   }
 });
 
-const sharp = require('sharp'); // 用于图像裁剪
+const sharp = require('sharp'); // 用於圖像裁剪
 app.post('/VideoParameter/test', async (req, res) => {
   const { x, y, width, height } = req.body;
   const tempFilePath = path.join(__dirname, '/Image/VideoToImg.jpg');
