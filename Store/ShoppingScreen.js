@@ -117,14 +117,14 @@ const ShoppingScreen = ({ route }) => {
                 <>
                   {/* <View style={{ width: '20%', height: '50%', borderWidth: 1 }} /> */}
 
-                  <View style={{ width: '100%', height: '100%', justifyContent: 'space-between'}}>
+                  <View style={{ width: '100%', height: '100%', justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'rgba(0,0,0,1)' }}>{selectedItem.name}</Text>
                     <Text style={{ fontSize: 20, textAlign: 'left', color: selectedItem.stock > 0 ? 'rgba(0,0,0,1)' : 'rgba(255,0,0,1)' }}>庫存:{selectedItem.stock}</Text>
-                    <View style={{ width: '20%', height: '20%', flexDirection: 'row',justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <View style={{ width: '20%', height: '20%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                       <Image source={require('../assets/img/Gold_Icon.png')} style={{ width: '50%', height: '45%' }} />
                       <Text style={{ fontSize: 25, textAlign: 'center' }}>{selectedItem.price}</Text>
                     </View>
-                    <View style={{ width: '100%', height: '30%', flexDirection: 'row'}}>
+                    <View style={{ width: '100%', height: '30%', flexDirection: 'row' }}>
                       <TouchableOpacity style={{ width: '8%', height: '50%', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderRadius: 25 }} onPress={() => { itemnum == 1 ? 1 : reduce_function() }}>
                         <Text style={{ fontSize: 45, width: '100%', height: '100%', lineHeight: 40, textAlign: 'center' }}>-</Text>
                       </TouchableOpacity>
